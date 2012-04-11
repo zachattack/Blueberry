@@ -31,6 +31,7 @@
 				height: 'auto', //reserved
 				hoverpause: false,
 				pager: true,
+        setheight: true,
 				nav: true, //reserved
 				keynav: true
 			}
@@ -132,49 +133,52 @@
 					});
 				}
 
-				//calculate and set height based on image width/height ratio and specified line height
-				var setsize = function(){
-					sliderWidth = $('.slides', obj).width();
-					cropHeight = Math.floor(((sliderWidth/imgRatio)/o.lineheight))*o.lineheight;
+        if(o.setheight) {
+          //calculate and set height based on image width/height ratio and specified line height
+          var setsize = function(){
+            sliderWidth = $('.slides', obj).width();
+            cropHeight = Math.floor(((sliderWidth/imgRatio)/o.lineheight))*o.lineheight;
+            $('.slides', obj).css({height: cropHeight});
+          };
+          setsize();
 
-					$('.slides', obj).css({height: cropHeight});
-				};
-				setsize();
-
-				//bind setsize function to window resize event
-				$(window).resize(function(){
-					setsize();
-				});
-				
-				
+          //bind setsize function to window resize event
+          $(window).resize(function(){
+            setsize();
+          });
+        }
 
 				//Add keyboard navigation
-
 				if(o.keynav){
 					$(document).keyup(function(e){
-
 						switch (e.which) {
-
 							case 39: case 32: //right arrow & space
-
 								clearTimeout(obj.play);
-
 								rotate();
-
 								break;
-
 
 							case 37: // left arrow
 								clearTimeout(obj.play);
 								next = current - 1;
 								rotate();
-
 								break;
 						}
-
 					});
 				}
 
+        //Add previous and next nav controls
+        if(o.nav){
+          $('#next').click(function(){
+            clearTimeout(obj.play);
+            rotate();
+          });
+
+          $('#back').click(function(){
+            clearTimeout(obj.play);
+            next = current - 1;
+            rotate();
+          });
+        }
 
 			});
 		}
